@@ -1,0 +1,33 @@
+# Dockerfile.streamlit
+FROM python:3.11-slim
+
+# Create app directory
+WORKDIR /app
+
+# Install system deps for PDFs (if needed)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements (adjust if you have separate requirements)
+COPY requirements.txt /app/requirements.txt
+
+# Install Python dependencies (no cache)
+RUN python -m pip install --upgrade pip
+RUN python -m pip install --no-cache-dir -r /app/requirements.txt
+
+# Copy application code
+COPY app.py /app/app.py
+COPY ktu_cgpa.py /app/ktu_cgpa.py
+# If you have other helper files, copy them too (e.g. utils, templates)
+# COPY <other files/folders> /app/
+
+# Expose Streamlit port
+EXPOSE 8501
+
+# Recommended: avoid streamlit telemetry and set server headless
+ENV STREAMLIT_SERVER_HEADLESS true
+ENV PYTHONUNBUFFERED=1
+
+# Entrypoint: run streamlit
+CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]

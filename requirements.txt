@@ -1,0 +1,17 @@
+# --- Frontend / Streamlit ---
+streamlit==1.51.0
+pandas>=1.4.0
+
+# --- Backend / FastAPI ---
+fastapi==0.116.1
+uvicorn[standard]==0.20.0
+python-multipart==0.0.20
+
+# --- PDF Processing ---
+PyPDF2==3.0.1
+
+# --- Optional Firestore Support ---
+google-cloud-firestore==2.14.0
+
+# --- General Dependencies ---
+requests

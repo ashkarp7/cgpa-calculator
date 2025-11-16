@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: cgpa_streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./:/app:ro
+      # If you want writable mount during development, remove :ro:
+      # - ./:/app
+      # OPTIONAL: mount service account key (do NOT commit key to repo)
+      # - ./serviceAccountKey.json:/secrets/serviceAccountKey.json:ro
+    environment:
+      STREAMLIT_SERVER_HEADLESS: "true"
+      # If you mount serviceAccountKey.json above, uncomment and set:
+      # GOOGLE_APPLICATION_CREDENTIALS: "/secrets/serviceAccountKey.json"
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.fastapi
+    container_name: cgpa_backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./:/app:ro
+      # OPTIONAL: mount service account key (do NOT commit key to repo)
+      # - ./serviceAccountKey.json:/secrets/serviceAccountKey.json:ro
+    # Provide environment mapping only if needed; remove or keep empty mapping to avoid validation errors
+    # environment: {}
+    restart: unless-stopped
